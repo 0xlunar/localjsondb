@@ -115,7 +115,9 @@ class Collection {
      * @returns {[]} Array of documents removed
     */
     remove(query){
-        var elementsToRemove = this.data.filter(query);
+        var elementsToRemove = this.data.filter(doc => {
+            query.includes(doc);
+        });
         this.data = this.data.filter(doc => !elementsToRemove.includes(doc));
         return elementsToRemove;
     }
@@ -127,6 +129,21 @@ class Collection {
     */
     find(query){
         return this.data.filter(query);
+    }
+
+    removeID(id){
+        var elementsToRemove = this.data.filter(doc => doc.__id == id);
+        this.data = this.data.filter(doc => !elementsToRemove.includes(doc));
+        return elementsToRemove;
+    }
+
+    /**
+     * Find many documents in the collection
+     * @param {function} query Function that returns true or false for a value
+     * @returns {[]} Array of documents found
+    */
+    findID(id){
+        return this.data.filter(doc => doc.__id == id);
     }
 }
 
