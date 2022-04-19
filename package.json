@@ -1,0 +1,25 @@
+{
+  "name": "@lunafr0st/localjsondb",
+  "version": "1.0.3",
+  "description": "Local JSON Database with no dependancies",
+  "main": "database.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/0xlunar/localjsondb.git"
+  },
+  "keywords": [
+    "js",
+    "pure",
+    "database",
+    "local"
+  ],
+  "author": "https://github.com/0xlunar/",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/0xlunar/localjsondb/issues"
+  },
+  "homepage": "https://github.com/0xlunar/localjsondb#readme"
+}
