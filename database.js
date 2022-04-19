@@ -53,6 +53,7 @@ class Database {
      * @param {string} name Name of Collection
      */
     getCollection(name){
+        if (!this.data[name]) return null;
         this.data[name] = new Collection(name, this.data[name].data);
         return this.data[name];
     }
@@ -60,9 +61,9 @@ class Database {
 }
 
 class Collection {
-    constructor(collection, data=[]){
+    constructor(collection, __data=[]){
         this.collection = collection;
-        this.data = data;
+        this.data = __data;
     }
 
     /**
@@ -77,26 +78,56 @@ class Collection {
      * @param {{}} data Object containing data
      */
     insertOne(data){
-        console.log(this.data);
-        this.data.push({id:this.__randomID(), ...data});
+        this.data.push({__id:this.__randomID(), ...data});
     }
 
     /**
-     * Remove a document from the collection
-     * @param {function} query use inverse Filter Function to find document
+     * Remove first document in the collection from query
+     * @param {function} query Function that returns true or false for a value
+     * @returns {{}} Removed document
      */
     removeOne(query){ // query is a function
-        this.data = this.data.filter(query);
+        var elementToRemove = this.data.filter(query)[0];
+        this.data = this.data.filter(doc => doc != elementToRemove);
+        return elementToRemove;
     }
 
     /**
-     * Find a document in the collection
+     * Find first document in the collection from query
      * @param {function} query Function that returns true or false for a value
      * @returns {{}} Object containing data
     */
     findOne(query){ // query is a function
         return this.data.find(query) || {};
     }
+
+    /**
+     * insert many documents to the collection
+     * @param {[]} data Array of Objects containing data
+    */
+    insert(data){
+        data.forEach(doc => this.data.push({__id:this.__randomID(), ...doc}));
+    }
+
+    /**
+     * Remove many documents from the collection 
+     * @param {function} query Function that returns true or false for a value
+     * @returns {[]} Array of documents removed
+    */
+    remove(query){
+        var elementsToRemove = this.data.filter(query);
+        this.data = this.data.filter(doc => !elementsToRemove.includes(doc));
+        return elementsToRemove;
+    }
+
+    /**
+     * Find many documents in the collection
+     * @param {function} query Function that returns true or false for a value
+     * @returns {[]} Array of documents found
+    */
+    find(query){
+        return this.data.filter(query);
+    }
 }
 
-export default Database;
+module.exports = Database;
