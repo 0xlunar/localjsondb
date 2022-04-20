@@ -66,6 +66,15 @@ class Collection {
         this.data = __data;
     }
 
+    __query(query){
+        return this.data.filter(doc => {
+            for (var key in query){
+                if (doc[key] != query[key]) return false;
+            }
+            return true;
+        });
+    }
+
     /**
      * Generate a random string
      */
@@ -83,22 +92,22 @@ class Collection {
 
     /**
      * Remove first document in the collection from query
-     * @param {function} query Function that returns true or false for a value
+     * @param {{}} query Object with key:value pairs to match
      * @returns {{}} Removed document
      */
     removeOne(query){ // query is a function
-        var elementToRemove = this.data.filter(query)[0];
+        var elementToRemove = this.__query(query)[0];
         this.data = this.data.filter(doc => doc != elementToRemove);
         return elementToRemove;
     }
 
     /**
      * Find first document in the collection from query
-     * @param {function} query Function that returns true or false for a value
+     * @param {{}} query Object with key:value pairs to match
      * @returns {{}} Object containing data
     */
     findOne(query){ // query is a function
-        return this.data.find(query) || {};
+        return this.__query(query)[0] || {};
     }
 
     /**
@@ -111,39 +120,87 @@ class Collection {
 
     /**
      * Remove many documents from the collection 
-     * @param {function} query Function that returns true or false for a value
+     * @param {{}} query Object with key:value pairs to match
      * @returns {[]} Array of documents removed
     */
     remove(query){
-        var elementsToRemove = this.data.filter(doc => {
-            query.includes(doc);
-        });
+        var elementsToRemove = this.__query(query);
         this.data = this.data.filter(doc => !elementsToRemove.includes(doc));
         return elementsToRemove;
     }
 
     /**
      * Find many documents in the collection
-     * @param {function} query Function that returns true or false for a value
+     * @param {{}} query Object with key:value pairs to match
      * @returns {[]} Array of documents found
     */
     find(query){
-        return this.data.filter(query);
+        return this.__query(query);
     }
 
+    /**
+     * Remove first document from the collection matching query
+     * @param {{}} query Object with key:value pairs to match
+     * @returns {{}} Object of document removed
+    */
     removeID(id){
-        var elementsToRemove = this.data.filter(doc => doc.__id == id);
-        this.data = this.data.filter(doc => !elementsToRemove.includes(doc));
-        return elementsToRemove;
+        var elementToRemove = this.__query({ __id: id })[0];
+        this.data = this.data.filter(doc => elementToRemove != doc);
+        return elementToRemove;
     }
 
     /**
      * Find many documents in the collection
-     * @param {function} query Function that returns true or false for a value
+     * @param {{}} query Object with key:value pairs to match
      * @returns {[]} Array of documents found
     */
     findID(id){
-        return this.data.filter(doc => doc.__id == id);
+        return this.__query({ __id: id });
+    }
+
+
+    /**
+     * Update first document in the collection matching query
+     * @param {{}} query Object with key:value pairs to match
+     * @param {{}} data Object with key:value pairs to update
+     * @returns {{}} Object of document updated
+     */
+    updateOne(query, data){
+        var elementToUpdate = this.__query(query)[0];
+        var index = this.data.indexOf(elementToUpdate);
+        this.data[index] = {...elementToUpdate, ...data};
+        return this.data[index];
+    }
+
+    /**
+     * Update Many documents in the collection
+     * @param {{}} query Object with key:value pairs to match
+     * @param {[{}]} data Object Array with key:value pairs to update
+     * @returns {[]} Array of documents updated
+     */
+    update(query, data){
+        var elementsToUpdate = this.__query(query);
+        var updatedElements = []
+        this.data.forEach((doc, index) => {
+            if (elementsToUpdate.includes(doc)){
+                this.data[index] = {...doc, ...data};
+                updatedElements.push(this.data[index]);
+            }
+        });
+        return updatedElements;
+    }
+
+    /**
+     * Update document in the collection matching ID
+     * @param {string} id ID to match __id of document
+     * @param {{}} data Object with key:value pairs to update
+     * @returns {{}} Object of document updated
+     */
+    updateID(id, data){
+        var elementToUpdate = this.__query({ __id: id })[0];
+        var index = this.data.indexOf(elementToUpdate);
+        this.data[index] = {...elementToUpdate, ...data};
+        return this.data[index];
     }
 }
 

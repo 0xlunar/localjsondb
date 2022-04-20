@@ -1,6 +1,6 @@
 {
   "name": "@lunafr0st/localjsondb",
-  "version": "1.0.4",
+  "version": "1.0.6",
   "description": "Local JSON Database with no dependancies",
   "main": "database.js",
   "scripts": {

@@ -75,13 +75,13 @@ data is type object{}
 > Collection.removeOne(query)
 
 Remove first document in the collection that match query
-query is type function, write a function that returns true for a document
+query is type object, with key:value pairs to match
 returns object{}
 
 > Collection.findOne(query)
 
 Find first document in the collection that match query
-query is type function, write a function that returns true for a document
+query is type object, with key:value pairs to match
 returns object{}
 
 > Collection.insert(data)
@@ -93,14 +93,35 @@ data is type Array<object> [{}]
 > Collection.remove(query)
 
 Remove all documents in the collection that match query
-query is type function, write a function that returns true for a document
+query is type object, with key:value pairs to match
 returns Array<object> [{}]
 
 > Collection.find(query)
 
 Find all documents in the collection that match query
-query is type function, write a function that returns true for a document
+query is type object, with key:value pairs to match
 returns Array<object> [{}]
+
+> Collection.update(query, data)
+
+Find all documents in the collection that match query
+query is type object, with key:value pairs to match
+data is type object array, with key:value pairs to update
+returns Array<object> [{}]
+
+> Collection.updateOne(query, data)
+
+Find first document in the collection that match query
+query is type object, with key:value pairs to match
+data is type object, with key:value pairs to update
+returns Object{}
+
+> Collection.updateID(id, data)
+
+Find first document in the collection that match ID
+ID is type string, with key:value pairs to match
+data is type object, with key:value pairs to update
+returns Object{}
 
 
 ## Contributing
